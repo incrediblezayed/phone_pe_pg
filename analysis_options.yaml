@@ -1,0 +1,15 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+linter:
+  rules:
+    prefer_single_quotes: true
+    unnecessary_lambdas: false
+    avoid_dynamic_calls: false
+    lines_longer_than_80_chars: false
+    library_private_types_in_public_api: false
+
+analyzer:
+  language: 
+    strict-casts: false
+    strict-inference: false
+    strict-raw-types: false
