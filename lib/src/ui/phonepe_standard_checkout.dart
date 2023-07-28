@@ -50,7 +50,9 @@ class PhonePeStandardCheckout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var canGoBack = false;
     final inAppWebViewKey = GlobalKey();
+    InAppWebViewController? inAppWebViewController;
     return ChangeNotifierProvider(
       create: (_) => PaymentProvider()
         ..init(
@@ -60,72 +62,98 @@ class PhonePeStandardCheckout extends StatelessWidget {
           isUAT: isUAT,
         ),
       builder: (context, child) {
-        return Consumer<PaymentProvider>(
-          builder: (context, value, child) {
-            var isError = false;
-            var urlString = '';
-            if (!value.loading) {
-              if (value.paymentResponseModel == null) {
-                isError = true;
+        return WillPopScope(
+          onWillPop: () async {
+            if (canGoBack) {
+              if (inAppWebViewController == null) {
+                return true;
               } else {
-                urlString = value.paymentResponseModel!.data!
-                    .instrumentResponse!.redirectInfo!.url!;
+                await inAppWebViewController!.loadUrl(
+                  urlRequest:
+                      URLRequest(url: Uri.parse(paymentRequest.redirectUrl!)),
+                );
               }
+              return false;
+            } else {
+              canGoBack = true;
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Press back again to cancel payment'),
+                ),
+              );
+              return false;
             }
-            return Scaffold(
-              appBar: appBar ??
-                  AppBar(
-                    title: const Text('Payment'),
-                    backgroundColor: const Color(0xff673ab7),
-                  ),
-              body: value.loading
-                  ? const Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(),
-                          Text('Initiating Payment'),
-                        ],
-                      ),
-                    )
-                  : isError
-                      ? const Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.error),
-                              Text(
-                                'Something went wrong while initiating payment',
-                              ),
-                            ],
-                          ),
-                        )
-                      : InAppWebView(
-                          key: inAppWebViewKey,
-                          initialUrlRequest: URLRequest(
-                            url: Uri.parse(urlString),
-                          ),
-                          initialOptions: InAppWebViewGroupOptions(
-                            crossPlatform: InAppWebViewOptions(),
-                          ),
-                          onLoadStart: (controller, url) {
-                            if (!url!.host.contains('phonepe')) {
-                              controller.stopLoading();
-                              value
-                                  .checkPaymentStatus(
-                                salt: salt,
-                                saltIndex: saltIndex,
-                              )
-                                  .then((value) {
-                                onPaymentComplete(value, null);
-                              }).catchError((e) {
-                                onPaymentComplete(null, e);
-                              });
-                            }
-                          },
-                        ),
-            );
           },
+          child: Consumer<PaymentProvider>(
+            builder: (context, value, child) {
+              var isError = false;
+              var urlString = '';
+              if (!value.loading) {
+                if (value.paymentResponseModel == null) {
+                  isError = true;
+                } else {
+                  urlString = value.paymentResponseModel!.data!
+                      .instrumentResponse!.redirectInfo!.url!;
+                }
+              }
+              return Scaffold(
+                appBar: appBar ??
+                    AppBar(
+                      title: const Text('Payment'),
+                      backgroundColor: const Color(0xff673ab7),
+                    ),
+                body: value.loading
+                    ? const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(),
+                            Text('Initiating Payment'),
+                          ],
+                        ),
+                      )
+                    : isError
+                        ? const Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.error),
+                                Text(
+                                  'Something went wrong while initiating payment',
+                                ),
+                              ],
+                            ),
+                          )
+                        : InAppWebView(
+                            key: inAppWebViewKey,
+                            initialUrlRequest: URLRequest(
+                              url: Uri.parse(urlString),
+                            ),
+                            initialOptions: InAppWebViewGroupOptions(
+                              crossPlatform: InAppWebViewOptions(),
+                            ),
+                            onWebViewCreated: (controller) {
+                              inAppWebViewController = controller;
+                            },
+                            onLoadStart: (controller, url) {
+                              if (!url!.host.contains('phonepe')) {
+                                controller.stopLoading();
+                                value
+                                    .checkPaymentStatus(
+                                  salt: salt,
+                                  saltIndex: saltIndex,
+                                )
+                                    .then((value) {
+                                  onPaymentComplete(value, null);
+                                }).catchError((e) {
+                                  onPaymentComplete(null, e);
+                                });
+                              }
+                            },
+                          ),
+              );
+            },
+          ),
         );
       },
     );

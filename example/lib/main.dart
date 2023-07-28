@@ -40,7 +40,7 @@ class _MyAppState extends State<MyApp> {
   PhonePePg pePg = PhonePePg(
     isUAT: true,
     saltKey: Secrets.saltKey,
-    saltIndex: Secrets.saltKey,
+    saltIndex: Secrets.saltIndex,
   );
 
   PaymentRequest _paymentRequest({String? merchantCallBackScheme}) {
