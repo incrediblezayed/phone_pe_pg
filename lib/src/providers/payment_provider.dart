@@ -23,6 +23,15 @@ class PaymentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _error = false;
+
+  /// Error
+  bool get error => _error;
+  set error(bool value) {
+    _error = value;
+    notifyListeners();
+  }
+
   /// LoadingMessage
   /// This is used to specify the loading message
   String loadingMessage = 'Initializing Payment';
@@ -43,30 +52,39 @@ class PaymentProvider extends ChangeNotifier {
   }) async {
     this.isUAT = isUAT;
     loading = true;
-    paymentResponseModel = await _paymentRepository.pay(
-      paymentRequest: paymentRequest,
-      salt: salt,
-      saltIndex: saltIndex,
-      isUAT: isUAT,
-    );
+    try {
+      paymentResponseModel = await _paymentRepository.pay(
+        paymentRequest: paymentRequest,
+        salt: salt,
+        saltIndex: saltIndex,
+        isUAT: isUAT,
+      );
+    } catch (e) {
+      _error = true;
+    }
     loading = false;
   }
 
   /// Checks the payment status
-  Future<PaymentStatusReponse> checkPaymentStatus({
+  Future<PaymentStatusReponse?> checkPaymentStatus({
     required String salt,
     required String saltIndex,
   }) async {
     loadingMessage = 'Checking Payment Status';
     loading = true;
-    final response = await _paymentRepository.checkStatus(
-      merchantId: paymentResponseModel!.data!.merchantId!,
-      merchantTransactionId: paymentResponseModel!.data!.merchantTransactionId!,
-      salt: salt,
-      saltIndex: saltIndex,
-      isUAT: isUAT,
-    );
-    loading = false;
-    return response;
+    try {
+      final response = await _paymentRepository.checkStatus(
+        merchantId: paymentResponseModel!.data!.merchantId!,
+        merchantTransactionId:
+            paymentResponseModel!.data!.merchantTransactionId!,
+        salt: salt,
+        saltIndex: saltIndex,
+        isUAT: isUAT,
+      );
+      return response;
+    } catch (e) {
+      error = true;
+      rethrow;
+    }
   }
 }

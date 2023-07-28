@@ -78,7 +78,7 @@ class PaymentRequest {
   final String? merchantUserId;
 
   /// Amount
-  final int? amount;
+  final double? amount;
 
   /// RedirectUrl
   /// This is the url to which the user will be redirected after the payment
@@ -114,7 +114,7 @@ class PaymentRequest {
     String? merchantId,
     String? merchantTransactionId,
     String? merchantUserId,
-    int? amount,
+    double? amount,
     String? callbackUrl,
     String? redirectUrl,
     String? redirectMode,
@@ -141,7 +141,7 @@ class PaymentRequest {
         'merchantId': merchantId,
         'merchantTransactionId': merchantTransactionId,
         'merchantUserId': merchantUserId,
-        'amount': (amount ?? 0) * 100,
+        'amount': ((amount ?? 0) * 100).toInt(),
         if (redirectUrl != null) 'redirectUrl': redirectUrl,
         if (redirectMode != null) 'redirectModel': redirectMode,
         'callbackUrl': callbackUrl,
