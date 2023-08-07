@@ -55,7 +55,7 @@ import 'package:phone_pe_pg/phone_pe_pg.dart';
   PhonePePg phonePePg = PhonePePg(
     isUAT: true,
     saltKey: Secrets.saltKey,
-    saltIndex: Secrets.saltKey,
+    saltIndex: Secrets.saltIndex,
   );
 ```
 The default PhonePePg constructor takes 3 parameters:
