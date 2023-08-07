@@ -4,6 +4,10 @@ Flutter package for integrating [PhonePe Payment Gateway](https://www.phonepe.co
 This is currently based on PhonePe SDK Less integeration and only supported on Android and iOS right now.
 
 ## Before you begin
+* For UAT: You need an app called 'PhonePe Simulator' You can request the PhonePe team for the same and they will provide you
+* [How to setup UAT](https://developer.phonepe.com/v1/docs/uat-simulator-1)
+* For Prod: You will have to get you app whitelisted, share you package name with the PhonePe team and they will whitelist it for you.
+* [How to go live](https://developer.phonepe.com/v1/docs/uat-to-production-migration)
 * As of the initial release, iOS support for UPI Intent (Opening UPI Apps to make payment) is not working as expected so avoid using it in production. Android support is working fine.
 * The standard PhonePe Checkout is Working fine on both Android and iOS.
 
@@ -163,5 +167,5 @@ The response is same as the `onPaymentComplete` callback of `startPayPageTransac
 
 #### And You're done with this for now
 
-## Apologies for bad documentation since the initial version is being published in a hurry, I'll keep improving it, and will try to add web platform as well.
+### Apologies for bad documentation since the initial version is being published in a hurry, I'll keep improving it, and will try to add web platform as well.
 # Thank You For Reading this far :)
