@@ -3,6 +3,9 @@ Flutter package for integrating [PhonePe Payment Gateway](https://www.phonepe.co
 
 This is currently based on PhonePe SDK Less integeration and only supported on Android and iOS right now.
 
+[![Join Discord](https://www.hassanansari.dev/public/PhonePePgPlugin%20Header.png)](https://discord.gg/APKKXjDPgv)
+
+
 ## Before you begin
 * For UAT: You need an app called 'PhonePe Simulator' You can request the PhonePe team for the same and they will provide you
 * [How to setup UAT](https://developer.phonepe.com/v1/docs/uat-simulator-1)

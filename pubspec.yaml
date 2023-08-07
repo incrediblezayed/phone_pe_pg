@@ -1,7 +1,10 @@
 name: phone_pe_pg
-description: A new Flutter plugin project.
+description: >- 
+  A Flutter plugin for integrating PhonePe Payment Gateway in flutter, with support for Android and iOS (currently).
 version: 0.0.1
 homepage: https://hassanansari.dev/
+repository: https://github.com/incrediblezayed/phone_pe_pg
+
 
 environment:
   sdk: '>=3.0.5 <4.0.0'
