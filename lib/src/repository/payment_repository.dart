@@ -37,19 +37,28 @@ class PaymentRepository {
     String? prodUrl,
   }) async {
     try {
+      Response response;
+      dynamic input;
       const gateway = '/pg/v1/pay';
-      final payload = paymentRequest.toRawJson().toBase64;
-      final forChecksum = '$payload$gateway$salt';
-      final sha256Key = forChecksum.toSha256;
-      final checksum = '$sha256Key###$saltIndex';
+      Map<String, String>? headers;
+      if (isUAT) {
+        final payload = paymentRequest.toRawJson().toBase64;
+        final forChecksum = '$payload$gateway$salt';
+        final sha256Key = forChecksum.toSha256;
+        final checksum = '$sha256Key###$saltIndex';
+        headers = {
+          'X-VERIFY': checksum,
+        };
+        input = {'request': payload};
+      } else {
+        input = paymentRequest.toJson();
+      }
       final url = isUAT ? (_preProdUrl + gateway) : prodUrl!;
-      final response = await _dio.post(
+      response = await _dio.post(
         url,
-        data: {'request': payload},
+        data: input,
         options: Options(
-          headers: {
-            'X-VERIFY': checksum,
-          },
+          headers: headers,
         ),
       );
       if (response.statusCode == 200 && response.data != null) {

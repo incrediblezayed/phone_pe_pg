@@ -81,6 +81,7 @@ class PhonePePg {
       paymentRequest: paymentRequest,
       salt: saltKey,
       saltIndex: saltIndex,
+      
     );
     final transactionResponse =
         await PhonePePgPlatform.instance.startTransaction(
@@ -119,6 +120,7 @@ class PhonePePg {
     PreferredSizeWidget? appBar,
   }) {
     return PhonePeStandardCheckout(
+      prodUrl: prodUrl,
       paymentRequest: paymentRequest,
       salt: saltKey,
       saltIndex: saltIndex,
