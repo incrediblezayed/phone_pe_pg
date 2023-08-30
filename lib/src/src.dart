@@ -15,7 +15,11 @@ class PhonePePg {
     required this.isUAT,
     required this.saltKey,
     required this.saltIndex,
-  });
+    this.prodUrl,
+  }) : assert(
+          !isUAT || (prodUrl != null && prodUrl.isNotEmpty),
+          'Prod URL should not be null if isUAT is false',
+        );
 
   /// isUAT
   /// This is used to specify whether the payment is to be made in UAT or PROD
@@ -28,6 +32,10 @@ class PhonePePg {
   /// saltIndex
   /// This is the salt index provided by the phonepe
   final String saltIndex;
+
+  /// Prod URL
+  /// This is the endpoint of the backend you deployed for calling the PhonePe pay api
+  final String? prodUrl;
 
   /// Get UPI Apps
   /// This is used to get the list of UPI apps installed on the device
@@ -57,6 +65,7 @@ class PhonePePg {
       salt: salt,
       saltIndex: saltIndex,
       isUAT: isUAT,
+      prodUrl: prodUrl,
     );
     return response;
   }

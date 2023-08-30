@@ -28,11 +28,13 @@ class PaymentRepository {
   /// [salt] is the salt key provided by the phonepe
   /// [saltIndex] is the salt index provided by the phonepe
   /// [isUAT] is used to specify whether the payment is to be made in UAT or PROD
+  /// [prodUrl] is the endpoint of your backend which will call the pay page api
   Future<PaymentResponseModel> pay({
     required PaymentRequest paymentRequest,
     required String salt,
     required String saltIndex,
     required bool isUAT,
+    String? prodUrl,
   }) async {
     try {
       const gateway = '/pg/v1/pay';
@@ -40,7 +42,7 @@ class PaymentRepository {
       final forChecksum = '$payload$gateway$salt';
       final sha256Key = forChecksum.toSha256;
       final checksum = '$sha256Key###$saltIndex';
-      final url = (isUAT ? _preProdUrl : _prodUrl) + gateway;
+      final url = isUAT ? (_preProdUrl + gateway) : prodUrl!;
       final response = await _dio.post(
         url,
         data: {'request': payload},

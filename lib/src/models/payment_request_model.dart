@@ -143,7 +143,7 @@ class PaymentRequest {
         'merchantUserId': merchantUserId,
         'amount': ((amount ?? 0) * 100).toInt(),
         if (redirectUrl != null) 'redirectUrl': redirectUrl,
-        if (redirectMode != null) 'redirectModel': redirectMode,
+        if (redirectMode != null) 'redirectMode': redirectMode,
         'callbackUrl': callbackUrl,
         'mobileNumber': mobileNumber,
         if (deviceContext != null) 'deviceContext': deviceContext?.toJson(),

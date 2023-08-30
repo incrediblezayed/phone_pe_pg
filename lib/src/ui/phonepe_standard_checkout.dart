@@ -24,6 +24,7 @@ class PhonePeStandardCheckout extends StatelessWidget {
     super.key,
     this.isUAT = false,
     this.appBar,
+    this.prodUrl,
   });
 
   /// Appbar for the screen
@@ -41,6 +42,10 @@ class PhonePeStandardCheckout extends StatelessWidget {
   /// Is UAT
   /// This is used to specify whether the payment is to be made in UAT or PROD
   final bool isUAT;
+
+  /// ProdURl
+  /// The endpoint of your backend which calls the pay api
+  final String? prodUrl;
 
   /// Callback function which is called when the payment is completed
   final void Function(
@@ -60,6 +65,7 @@ class PhonePeStandardCheckout extends StatelessWidget {
           salt: salt,
           saltIndex: saltIndex,
           isUAT: isUAT,
+          prodUrl: prodUrl,
         ),
       builder: (context, child) {
         return WillPopScope(

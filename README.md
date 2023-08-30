@@ -9,7 +9,37 @@ This is currently based on PhonePe SDK Less integeration and only supported on A
 ## Before you begin
 * For UAT: You need an app called 'PhonePe Simulator' You can request the PhonePe team for the same and they will provide you
 * [How to setup UAT](https://developer.phonepe.com/v1/docs/uat-simulator-1)
-* For Prod: You will have to get you app whitelisted, share you package name with the PhonePe team and they will whitelist it for you.
+* For Prod: 
+  * You will have to write the api for hitting the PhonePe pay api, and share the IP of the server from where you're hitting the PhonePe API
+  * Example code 
+   ```typescript
+   import crypto from "crypto";
+   async function pay(req: any): Promise<any> {
+    const saltKey = process.env.SALT_KEY;
+    const body = JSON.stringify(req.body);
+    const payload = Buffer.from(body).toString("base64");
+    const gateway = "/pg/v1/pay";
+    const dataForChecksum = payload + gateway + saltKey;
+    let hash = crypto.createHash("sha256");
+    hash.update(dataForChecksum);
+    const hashValue = hash.digest("hex");
+    const xVerify = hashValue + "###" + 1;
+    const url = process.env.PHONEPE_URL;
+    const headers = {
+        "Content-Type": "application/json",
+        accept: "application/json",
+        "X-VERIFY": xVerify,
+    };
+    const response = await axios.post(
+        url!,
+        JSON.stringify({ request: payload }),
+        { headers: headers }
+    );
+    return response.data;
+    } 
+   ```
+   * **Note: the above code is written in typescript, you have to get the input and response in the same format for the package to work, I will try to make it more dynamic in futur, but this is it for now**
+  * You will have to get you app whitelisted, share you package name with the PhonePe team and they will whitelist it for you.
 * [How to go live](https://developer.phonepe.com/v1/docs/uat-to-production-migration)
 * As of the initial release, iOS support for UPI Intent (Opening UPI Apps to make payment) is not working as expected so avoid using it in production. Android support is working fine.
 * The standard PhonePe Checkout is Working fine on both Android and iOS.
@@ -56,12 +86,14 @@ import 'package:phone_pe_pg/phone_pe_pg.dart';
     isUAT: true,
     saltKey: Secrets.saltKey,
     saltIndex: Secrets.saltIndex,
+    prodUrl: yourapi/url
   );
 ```
 The default PhonePePg constructor takes 3 parameters:
 * isUAT: This is a boolean value which is used to determine whether to use the UAT or Production environment. By default it is set to true.
 * saltKey: This is the salt key provided by PhonePe. You can get it from [here](https://www.phonepe.com/business-solutions/payment-gateway/).
 * saltIndex: This is the salt index provided by PhonePe. You can get it from [here](https://www.phonepe.com/business-solutions/payment-gateway/).
+* prodUrl: This is the URL of your backend where you've got the api for hitting PhonePe's pay api, it should not be null or empty when isUAT is false
 
 
 ### Payment Request

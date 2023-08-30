@@ -49,6 +49,7 @@ class PaymentProvider extends ChangeNotifier {
     required String salt,
     required String saltIndex,
     required bool isUAT,
+     String? prodUrl,
   }) async {
     this.isUAT = isUAT;
     loading = true;
@@ -58,6 +59,7 @@ class PaymentProvider extends ChangeNotifier {
         salt: salt,
         saltIndex: saltIndex,
         isUAT: isUAT,
+        prodUrl: prodUrl,
       );
     } catch (e) {
       _error = true;
