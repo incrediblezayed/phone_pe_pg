@@ -79,7 +79,7 @@ class PhonePeStandardCheckout extends StatelessWidget {
                       URLRequest(url: Uri.parse(paymentRequest.redirectUrl!)),
                 );
               }
-              return false;
+              return true;
             } else {
               canGoBack = true;
               ScaffoldMessenger.of(context).showSnackBar(
