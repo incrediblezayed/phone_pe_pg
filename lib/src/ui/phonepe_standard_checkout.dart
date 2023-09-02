@@ -113,7 +113,9 @@ class PhonePeStandardCheckout extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            CircularProgressIndicator(),
+                            CircularProgressIndicator(
+                              color: Color(0xff673ab7),
+                            ),
                             Text('Initiating Payment'),
                           ],
                         ),
@@ -142,7 +144,17 @@ class PhonePeStandardCheckout extends StatelessWidget {
                               inAppWebViewController = controller;
                             },
                             onLoadStart: (controller, url) {
-                              if (!url!.host.contains('phonepe')) {
+                              final currentUrl = url!.toString().contains('www')
+                                  ? url.toString().replaceAll('www.', '')
+                                  : url.toString();
+
+                              final redirectUrl =
+                                  paymentRequest.redirectUrl!.contains('www')
+                                      ? paymentRequest.redirectUrl!
+                                          .replaceAll('www.', '')
+                                      : paymentRequest.redirectUrl;
+
+                              if (redirectUrl == currentUrl) {
                                 controller.stopLoading();
                                 value
                                     .checkPaymentStatus(
