@@ -76,15 +76,19 @@ class PhonePePg {
   /// This will generate the url and launch the UPI app
   Future<UpiTransactionResponse> startUpiTransaction({
     required PaymentRequest paymentRequest,
+    String? intentUrl,
   }) async {
-    final response = await pay(
-      paymentRequest: paymentRequest,
-      salt: saltKey,
-      saltIndex: saltIndex,
-    );
+    late PaymentResponseModel response;
+    if (intentUrl == null) {
+      response = await pay(
+        paymentRequest: paymentRequest,
+        salt: saltKey,
+        saltIndex: saltIndex,
+      );
+    }
     final transactionResponse =
         await PhonePePgPlatform.instance.startTransaction(
-      uri: response.data!.instrumentResponse!.intentUrl!,
+      uri: intentUrl ?? response.data!.instrumentResponse!.intentUrl!,
       package: (paymentRequest.paymentInstrument! as UpiIntentPaymentInstrument)
           .targetApp,
     );
