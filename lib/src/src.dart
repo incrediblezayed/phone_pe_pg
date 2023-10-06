@@ -17,7 +17,7 @@ class PhonePePg {
     required this.saltIndex,
     this.prodUrl,
   }) : assert(
-          !isUAT || (prodUrl != null && prodUrl.isNotEmpty),
+          isUAT || (prodUrl != null && prodUrl.isNotEmpty),
           'Prod URL should not be null if isUAT is false',
         );
 
