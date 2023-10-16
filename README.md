@@ -91,8 +91,8 @@ import 'package:phone_pe_pg/phone_pe_pg.dart';
 ```
 The default PhonePePg constructor takes 3 parameters:
 * isUAT: This is a boolean value which is used to determine whether to use the UAT or Production environment. By default it is set to true.
-* saltKey: This is the salt key provided by PhonePe. You can get it from [here](https://www.phonepe.com/business-solutions/payment-gateway/).
-* saltIndex: This is the salt index provided by PhonePe. You can get it from [here](https://www.phonepe.com/business-solutions/payment-gateway/).
+* saltKey: This is the salt key provided by PhonePe. You can get it from [here](https://www.phonepe.com/business-solutions/payment-gateway/). Use [this](https://developer.phonepe.com/v1/docs/uat-testing#plugin-integration---test-setup) for UAT Testing
+* saltIndex: This is the salt index provided by PhonePe. You can get it from [here](https://www.phonepe.com/business-solutions/payment-gateway/). Use [this](https://developer.phonepe.com/v1/docs/uat-testing#plugin-integration---test-setup) for UAT Testing
 * prodUrl: This is the URL of your backend where you've got the api for hitting PhonePe's pay api, it should not be null or empty when isUAT is false
 
 
