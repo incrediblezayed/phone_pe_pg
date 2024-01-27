@@ -120,6 +120,8 @@ class PhonePePg {
     required PaymentRequest paymentRequest,
     required Function(PaymentStatusReponse? paymentStatusReponse, dynamic error)
         onPaymentComplete,
+    Future<PaymentStatusReponse> Function(String merchantTransactionID)?
+        onStatusCheck,
     PreferredSizeWidget? appBar,
   }) {
     return PhonePeStandardCheckout(
@@ -130,6 +132,7 @@ class PhonePePg {
       onPaymentComplete: onPaymentComplete,
       appBar: appBar,
       isUAT: isUAT,
+      onStatusCheck: onStatusCheck,
     );
   }
 }
