@@ -46,9 +46,9 @@ class PaymentProvider extends ChangeNotifier {
   /// and loaded in the webview
   Future<void> init({
     required PaymentRequest paymentRequest,
-    required String salt,
-    required String saltIndex,
     required bool isUAT,
+    String? salt,
+    String? saltIndex,
     String? prodUrl,
   }) async {
     this.isUAT = isUAT;

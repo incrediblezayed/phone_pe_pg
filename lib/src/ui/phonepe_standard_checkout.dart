@@ -25,7 +25,11 @@ class PhonePeStandardCheckout extends StatelessWidget {
     this.isUAT = false,
     this.appBar,
     this.prodUrl,
-  });
+    this.onStatusCheck,
+  }) : assert(
+          onStatusCheck != null || (salt != null && saltIndex != null),
+          'salt and saltIndex must be provided if onStatusCheck is not provided',
+        );
 
   /// Appbar for the screen
   final PreferredSizeWidget? appBar;
@@ -34,10 +38,10 @@ class PhonePeStandardCheckout extends StatelessWidget {
   final PaymentRequest paymentRequest;
 
   /// Salt Key provided by the phonepe
-  final String salt;
+  final String? salt;
 
   /// Salt Index provided by the phonepe
-  final String saltIndex;
+  final String? saltIndex;
 
   /// Is UAT
   /// This is used to specify whether the payment is to be made in UAT or PROD
@@ -46,6 +50,9 @@ class PhonePeStandardCheckout extends StatelessWidget {
   /// ProdURl
   /// The endpoint of your backend which calls the pay api
   final String? prodUrl;
+
+  final Future<PaymentStatusReponse> Function(String merchantTransactionID)?
+      onStatusCheck;
 
   /// Callback function which is called when the payment is completed
   final void Function(
@@ -156,16 +163,26 @@ class PhonePeStandardCheckout extends StatelessWidget {
 
                               if (redirectUrl == currentUrl) {
                                 controller.stopLoading();
-                                value
-                                    .checkPaymentStatus(
-                                  salt: salt,
-                                  saltIndex: saltIndex,
-                                )
-                                    .then((value) {
-                                  onPaymentComplete(value, null);
-                                }).catchError((e) {
-                                  onPaymentComplete(null, e);
-                                });
+                                if (onStatusCheck != null) {
+                                  onStatusCheck!(
+                                    paymentRequest.merchantTransactionId!,
+                                  ).then((value) {
+                                    onPaymentComplete(value, null);
+                                  }).catchError((e) {
+                                    onPaymentComplete(null, e);
+                                  });
+                                } else {
+                                  value
+                                      .checkPaymentStatus(
+                                    salt: salt!,
+                                    saltIndex: saltIndex!,
+                                  )
+                                      .then((value) {
+                                    onPaymentComplete(value, null);
+                                  }).catchError((e) {
+                                    onPaymentComplete(null, e);
+                                  });
+                                }
                               }
                             },
                           ),

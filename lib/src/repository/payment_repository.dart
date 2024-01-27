@@ -31,11 +31,15 @@ class PaymentRepository {
   /// [prodUrl] is the endpoint of your backend which will call the pay page api
   Future<PaymentResponseModel> pay({
     required PaymentRequest paymentRequest,
-    required String salt,
-    required String saltIndex,
     required bool isUAT,
+    String? salt,
+    String? saltIndex,
     String? prodUrl,
   }) async {
+    assert(
+      !isUAT || (salt != null && saltIndex != null),
+      'salt and saltIndex must be provided if isUAT is true',
+    );
     try {
       Response response;
       dynamic input;
