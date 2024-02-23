@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.7]
+* Added namespace for compatibility with latest versions
+
 ## [0.0.6]
 * Merged the PR [#3](https://github.com/incrediblezayed/pull/issues/3) for adding the intent URL if someone wants to call the pay api directly.
 * Dependency Version Upgrades
