@@ -75,18 +75,17 @@ class PhonePeStandardCheckout extends StatelessWidget {
           prodUrl: prodUrl,
         ),
       builder: (context, child) {
-        return WillPopScope(
-          onWillPop: () async {
+        return PopScope(
+          canPop: canGoBack,
+          onPopInvoked: (invoked) async {
             if (canGoBack) {
               if (inAppWebViewController == null) {
-                return true;
               } else {
                 await inAppWebViewController!.loadUrl(
                   urlRequest:
-                      URLRequest(url: Uri.parse(paymentRequest.redirectUrl!)),
+                      URLRequest(url: WebUri(paymentRequest.redirectUrl!)),
                 );
               }
-              return true;
             } else {
               canGoBack = true;
               ScaffoldMessenger.of(context).showSnackBar(
@@ -94,7 +93,6 @@ class PhonePeStandardCheckout extends StatelessWidget {
                   content: Text('Press back again to cancel payment'),
                 ),
               );
-              return false;
             }
           },
           child: Consumer<PaymentProvider>(
@@ -142,10 +140,7 @@ class PhonePeStandardCheckout extends StatelessWidget {
                         : InAppWebView(
                             key: inAppWebViewKey,
                             initialUrlRequest: URLRequest(
-                              url: Uri.parse(urlString),
-                            ),
-                            initialOptions: InAppWebViewGroupOptions(
-                              crossPlatform: InAppWebViewOptions(),
+                              url: WebUri(urlString),
                             ),
                             onWebViewCreated: (controller) {
                               inAppWebViewController = controller;

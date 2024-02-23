@@ -11,19 +11,18 @@ environment:
 
 dependencies:
   crypto: ^3.0.3
-  dio: ^5.3.2
+  dio: ^5.4.1
   flutter:
     sdk: flutter
-  flutter_inappwebview: ^5.7.2+3
-  plugin_platform_interface: ^2.1.6
-  provider: ^6.0.5
-  url_launcher: ^6.1.14
+  flutter_inappwebview: ^6.0.0
+  plugin_platform_interface: ^2.1.8
+  provider: ^6.1.1
+  url_launcher: ^6.2.5
 
 dev_dependencies:
-  flutter_lints: ^2.0.3
+  flutter_lints: ^3.0.1
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^5.1.0
 
 flutter:
   plugin:
